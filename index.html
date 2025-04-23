@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MALIK BOOK BINDING – رسیدی نظام</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@40400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jameel+Noori+Nastaleeq&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8; /* Light background */
+            direction: ltr; /* Default direction */
+        }
+        .urdu-text {
+            font-family: 'Jameel Noori Nastaleeq', sans-serif;
+            direction: rtl;
+            text-align: right;
+        }
+        .receipt-card {
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .whatsapp-button {
+            background-color: #25D366; /* WhatsApp green */
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Jameel Noori Nastaleeq', sans-serif;
+            text-align: center;
+        }
+        .whatsapp-button:hover {
+             background-color: #1DA851;
+        }
+         .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+         .form-textarea {
+             min-height: 100px;
+         }
+         .form-group {
+             margin-bottom: 1rem;
+         }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="container mx-auto max-w-2xl">
+
+        <div id="orderForm" class="bg-white p-6 rounded-lg receipt-card">
+            <h1 class="text-2xl font-bold mb-6 text-center">MALIK BOOK BINDING – رسیدی نظام</h1>
+
+            <div class="form-group">
+                <label for="fullName" class="block text-gray-700 text-sm font-bold mb-2">Full Name / مکمل نام</label>
+                <input type="text" id="fullName" class="form-input" placeholder="Enter your full name / اپنا مکمل نام درج کریں">
+            </div>
+
+            <div class="form-group">
+                <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">Phone Number / فون نمبر</label>
+                <input type="text" id="phone" class="form-input" placeholder="Enter your phone number / اپنا فون نمبر درج کریں">
+            </div>
+
+            <div class="form-group">
+                <label for="bookType" class="block text-gray-700 text-sm font-bold mb-2">Book Type / جلد کی قسم</label>
+                <select id="bookType" class="form-select">
+                    <option value="">Select Book Type / جلد کی قسم منتخب کریں</option>
+                    <option value="Thesis">Thesis / تھیسس</option>
+                    <option value="Classic">Classic / کلاسیکی</option>
+                    <option value="Premium">Premium / پریمیم</option>
+                    <option value="Other">Other / دیگر</option>
+                </select>
+            </div>
+
+             <div class="form-group">
+                <label for="numBooks" class="block text-gray-700 text-sm font-bold mb-2">Number of Books / جلدوں کی تعداد</label>
+                <input type="number" id="numBooks" class="form-input" min="1" value="1" placeholder="Enter number of books / جلدوں کی تعداد درج کریں">
+            </div>
+
+            <div class="form-group">
+                <label for="deliveryAddress" class="block text-gray-700 text-sm font-bold mb-2">Delivery Address / مکمل پتہ</label>
+                <textarea id="deliveryAddress" class="form-textarea" placeholder="Enter delivery address / ترسیل کا پتہ درج کریں"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="additionalNotes" class="block text-gray-700 text-sm font-bold mb-2">Additional Notes / اضافی ہدایات (Optional)</label>
+                <textarea id="additionalNotes" class="form-textarea urdu-text" placeholder="اضافی ہدایات درج کریں (اگر کوئی ہیں)"></textarea>
+            </div>
+
+            <button id="submitOrderBtn" class="w-full bg-green-600 text-white py-2 rounded-md font-semibold hover:bg-green-700 transition duration-200">
+                آرڈر کریں / Submit Order
+            </button>
+        </div>
+
+        <div id="receiptSection" class="bg-white p-6 rounded-lg receipt-card hidden">
+            <h1 class="text-2xl font-bold mb-6 text-center">MALIK BOOK BINDING – رسید</h1>
+
+            <div id="receiptContent">
+                <p class="mb-2"><strong>Receipt Number / رسید نمبر:</strong> <span id="receiptNumber"></span></p>
+                <p class="mb-4"><strong>Date & Time / تاریخ اور وقت:</strong> <span id="receiptDateTime"></span></p>
+
+                <hr class="my-4">
+
+                <p class="mb-2"><strong>Full Name / مکمل نام:</strong> <span id="receiptFullName"></span></p>
+                <p class="mb-2"><strong>Phone Number / فون نمبر:</strong> <span id="receiptPhone"></span></p>
+                <p class="mb-2"><strong>Book Type / جلد کی قسم:</strong> <span id="receiptBookType"></span></p>
+                 <p class="mb-2"><strong>Number of Books / جلدوں کی تعداد:</strong> <span id="receiptNumBooks"></span></p>
+                <p class="mb-2"><strong>Delivery Address / مکمل پتہ:</strong> <span id="receiptDeliveryAddress"></span></p>
+                <p class="mb-2 urdu-text"><strong>Additional Notes / اضافی ہدایات:</strong> <span id="receiptAdditionalNotes" class="urdu-text"></span></p>
+
+                <hr class="my-4">
+
+                <p class="text-center urdu-text">شکریہ! آپ کا آرڈر موصول ہو گیا ہے۔</p>
+                 <p class="text-center">Thank you! Your order has been received.</p>
+            </div>
+
+            <div class="mt-6 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 justify-center">
+                <button id="downloadPdfBtn" class="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 transition duration-200">
+                    پی ڈی ایف ڈاؤنلوڈ کریں / Download PDF
+                </button>
+                 <a id="whatsappLink" href="#" target="_blank" class="whatsapp-button text-center">
+                    واٹس ایپ پر بھیجیں / Send on WhatsApp
+                </a>
+                <button id="newOrderBtn" class="bg-gray-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-gray-700 transition duration-200">
+                    نیا آرڈر کریں / New Order
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Ensure jsPDF and html2canvas are loaded before use
+        const { jsPDF } = window.jspdf;
+
+        document.getElementById('submitOrderBtn').addEventListener('click', function() {
+            // Get form values
+            const fullName = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const bookType = document.getElementById('bookType').value;
+            const numBooks = document.getElementById('numBooks').value.trim();
+            const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+            const additionalNotes = document.getElementById('additionalNotes').value.trim();
+
+            // Basic validation
+            if (!fullName || !phone || !bookType || !numBooks || !deliveryAddress) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Generate Receipt Number
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            // A simple way to get a unique part - timestamp based
+            const uniqueId = `${year}${month}${day}-${hours}${minutes}${seconds}`;
+            const receiptNum = `#MB-${uniqueId}`;
+
+            // Format Date and Time
+            const receiptDateTime = now.toLocaleString(); // Uses local format
+
+            // Populate Receipt Section
+            document.getElementById('receiptNumber').textContent = receiptNum;
+            document.getElementById('receiptDateTime').textContent = receiptDateTime;
+            document.getElementById('receiptFullName').textContent = fullName;
+            document.getElementById('receiptPhone').textContent = phone;
+            document.getElementById('receiptBookType').textContent = bookType;
+            document.getElementById('receiptNumBooks').textContent = numBooks;
+            document.getElementById('receiptDeliveryAddress').textContent = deliveryAddress;
+            document.getElementById('receiptAdditionalNotes').textContent = additionalNotes || 'N/A / دستیاب نہیں'; // Handle empty notes
+
+            // Generate WhatsApp Message
+            const whatsappMessage = `السلام علیکم! میں MALIK BOOK BINDING سے اپنا آرڈر کنفرم کرنا چاہتا ہوں۔\n\n` +
+                                    `رسید نمبر: ${receiptNum}\n` +
+                                    `تاریخ اور وقت: ${receiptDateTime}\n` +
+                                    `مکمل نام: ${fullName}\n` +
+                                    `فون نمبر: ${phone}\n` +
+                                    `جلد کی قسم: ${bookType}\n` +
+                                    `جلدوں کی تعداد: ${numBooks}\n` +
+                                    `مکمل پتہ: ${deliveryAddress}\n` +
+                                    `اضافی ہدایات: ${additionalNotes || 'دستیاب نہیں'}\n\n` +
+                                    `شکریہ!`;
+
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            // Replace with the actual WhatsApp number
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=923322964709&text=${encodedMessage}`;
+            document.getElementById('whatsappLink').href = whatsappUrl;
+
+
+            // Show Receipt Section, Hide Form Section
+            document.getElementById('orderForm').classList.add('hidden');
+            document.getElementById('receiptSection').classList.remove('hidden');
+        });
+
+        // Download PDF Button
+        document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+            const receiptContent = document.getElementById('receiptContent'); // Element to convert to PDF
+
+            // Use html2canvas to render the HTML element
+            html2canvas(receiptContent, { scale: 2 }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'px',
+                    format: [canvas.width, canvas.height] // Use canvas dimensions for PDF size
+                });
+
+                // Add the image of the receipt content to the PDF
+                pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+
+                // Save the PDF
+                const receiptNum = document.getElementById('receiptNumber').textContent;
+                pdf.save(`MALIK_Book_Binding_Receipt_${receiptNum}.pdf`);
+            });
+        });
+
+        // New Order Button
+        document.getElementById('newOrderBtn').addEventListener('click', function() {
+            // Clear form fields
+            document.getElementById('fullName').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('bookType').value = '';
+            document.getElementById('numBooks').value = '1';
+            document.getElementById('deliveryAddress').value = '';
+            document.getElementById('additionalNotes').value = '';
+
+            // Hide Receipt Section, Show Form Section
+            document.getElementById('receiptSection').classList.add('hidden');
+            document.getElementById('orderForm').classList.remove('hidden');
+        });
+
+         // Optional: Add a simple way to handle the "Other" book type if needed
+         document.getElementById('bookType').addEventListener('change', function() {
+             if (this.value === 'Other') {
+                 // You could add a new text input here for the user to specify "Other"
+                 // For now, we'll just include "Other" in the receipt text.
+             }
+         });
+
+    </script>
+</body>
+</html>
