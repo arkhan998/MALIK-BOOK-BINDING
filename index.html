@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MALIK BOOK BINDING – رسیدی نظام</title>
+    <title>MALIK BOOK BINDING – پارسل رسید نظام</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@40400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Jameel+Noori+Nastaleeq&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -20,6 +20,10 @@
             direction: rtl;
             text-align: right;
         }
+         .english-text {
+             direction: ltr;
+             text-align: left;
+         }
         .receipt-card {
             border: 1px solid #e2e8f0;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -51,6 +55,30 @@
          .form-group {
              margin-bottom: 1rem;
          }
+         .language-option {
+             display: flex;
+             align-items: center;
+             margin-bottom: 15px;
+         }
+         .language-option input[type="radio"] {
+             margin-right: 5px;
+         }
+         .language-option label {
+             margin-right: 15px;
+         }
+         .address-section {
+             border: 1px solid #e2e8f0;
+             padding: 15px;
+             margin-bottom: 20px;
+             border-radius: 4px;
+         }
+         .address-section h3 {
+             font-size: 1.1rem;
+             font-weight: bold;
+             margin-bottom: 10px;
+             border-bottom: 1px solid #e2e8f0;
+             padding-bottom: 5px;
+         }
     </style>
 </head>
 <body class="p-4">
@@ -58,17 +86,38 @@
     <div class="container mx-auto max-w-2xl">
 
         <div id="orderForm" class="bg-white p-6 rounded-lg receipt-card">
-            <h1 class="text-2xl font-bold mb-6 text-center">MALIK BOOK BINDING – رسیدی نظام</h1>
+            <h1 class="text-2xl font-bold mb-6 text-center">MALIK BOOK BINDING – پارسل رسید نظام</h1>
+            <p class="text-center text-gray-600 mb-6">(Generate Parcel Receipt)</p>
 
             <div class="form-group">
-                <label for="fullName" class="block text-gray-700 text-sm font-bold mb-2">Full Name / مکمل نام</label>
-                <input type="text" id="fullName" class="form-input" placeholder="Enter your full name / اپنا مکمل نام درج کریں">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Receipt Language / رسید کی زبان:</label>
+                <div class="language-option">
+                    <input type="radio" id="langEnglish" name="receiptLanguage" value="english" checked>
+                    <label for="langEnglish">English</label>
+
+                    <input type="radio" id="langUrdu" name="receiptLanguage" value="urdu">
+                    <label for="langUrdu" class="urdu-text">اردو</label>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4">Recipient Details / وصول کنندہ کی تفصیلات</h2>
+
+            <div class="form-group">
+                <label for="recipientFullName" class="block text-gray-700 text-sm font-bold mb-2">Recipient Full Name / وصول کنندہ کا مکمل نام</label>
+                <input type="text" id="recipientFullName" class="form-input" placeholder="Enter recipient's full name / وصول کنندہ کا مکمل نام درج کریں">
             </div>
 
             <div class="form-group">
-                <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">Phone Number / فون نمبر</label>
-                <input type="text" id="phone" class="form-input" placeholder="Enter your phone number / اپنا فون نمبر درج کریں">
+                <label for="recipientPhone" class="block text-gray-700 text-sm font-bold mb-2">Recipient Phone Number / وصول کنندہ کا فون نمبر</label>
+                <input type="text" id="recipientPhone" class="form-input" placeholder="Enter recipient's phone number / وصول کنندہ کا فون نمبر درج کریں">
             </div>
+
+            <div class="form-group">
+                <label for="recipientAddress" class="block text-gray-700 text-sm font-bold mb-2">Recipient Address / وصول کنندہ کا پتہ</label>
+                <textarea id="recipientAddress" class="form-textarea" placeholder="Enter recipient's delivery address / وصول کنندہ کا ترسیل کا پتہ درج کریں"></textarea>
+            </div>
+
+            <h2 class="text-xl font-semibold mb-4 mt-6">Order Details / آرڈر کی تفصیلات</h2>
 
             <div class="form-group">
                 <label for="bookType" class="block text-gray-700 text-sm font-bold mb-2">Book Type / جلد کی قسم</label>
@@ -87,41 +136,20 @@
             </div>
 
             <div class="form-group">
-                <label for="deliveryAddress" class="block text-gray-700 text-sm font-bold mb-2">Delivery Address / مکمل پتہ</label>
-                <textarea id="deliveryAddress" class="form-textarea" placeholder="Enter delivery address / ترسیل کا پتہ درج کریں"></textarea>
-            </div>
-
-            <div class="form-group">
                 <label for="additionalNotes" class="block text-gray-700 text-sm font-bold mb-2">Additional Notes / اضافی ہدایات (Optional)</label>
                 <textarea id="additionalNotes" class="form-textarea urdu-text" placeholder="اضافی ہدایات درج کریں (اگر کوئی ہیں)"></textarea>
             </div>
 
             <button id="submitOrderBtn" class="w-full bg-green-600 text-white py-2 rounded-md font-semibold hover:bg-green-700 transition duration-200">
-                آرڈر کریں / Submit Order
+                رسید بنائیں / Generate Receipt
             </button>
         </div>
 
         <div id="receiptSection" class="bg-white p-6 rounded-lg receipt-card hidden">
-            <h1 class="text-2xl font-bold mb-6 text-center">MALIK BOOK BINDING – رسید</h1>
+            <h1 class="text-2xl font-bold mb-6 text-center">MALIK BOOK BINDING – <span id="receiptTitleLang"></span></h1>
 
             <div id="receiptContent">
-                <p class="mb-2"><strong>Receipt Number / رسید نمبر:</strong> <span id="receiptNumber"></span></p>
-                <p class="mb-4"><strong>Date & Time / تاریخ اور وقت:</strong> <span id="receiptDateTime"></span></p>
-
-                <hr class="my-4">
-
-                <p class="mb-2"><strong>Full Name / مکمل نام:</strong> <span id="receiptFullName"></span></p>
-                <p class="mb-2"><strong>Phone Number / فون نمبر:</strong> <span id="receiptPhone"></span></p>
-                <p class="mb-2"><strong>Book Type / جلد کی قسم:</strong> <span id="receiptBookType"></span></p>
-                 <p class="mb-2"><strong>Number of Books / جلدوں کی تعداد:</strong> <span id="receiptNumBooks"></span></p>
-                <p class="mb-2"><strong>Delivery Address / مکمل پتہ:</strong> <span id="receiptDeliveryAddress"></span></p>
-                <p class="mb-2 urdu-text"><strong>Additional Notes / اضافی ہدایات:</strong> <span id="receiptAdditionalNotes" class="urdu-text"></span></p>
-
-                <hr class="my-4">
-
-                <p class="text-center urdu-text">شکریہ! آپ کا آرڈر موصول ہو گیا ہے۔</p>
-                 <p class="text-center">Thank you! Your order has been received.</p>
-            </div>
+                </div>
 
             <div class="mt-6 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 justify-center">
                 <button id="downloadPdfBtn" class="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 transition duration-200">
@@ -131,7 +159,7 @@
                     واٹس ایپ پر بھیجیں / Send on WhatsApp
                 </a>
                 <button id="newOrderBtn" class="bg-gray-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-gray-700 transition duration-200">
-                    نیا آرڈر کریں / New Order
+                    نیا آرڈر / New Order
                 </button>
             </div>
         </div>
@@ -143,19 +171,26 @@
         const { jsPDF } = window.jspdf;
 
         document.getElementById('submitOrderBtn').addEventListener('click', function() {
-            // Get form values
-            const fullName = document.getElementById('fullName').value.trim();
-            const phone = document.getElementById('phone').value.trim();
+            // Get form values (Recipient and Order Details)
+            const recipientFullName = document.getElementById('recipientFullName').value.trim();
+            const recipientPhone = document.getElementById('recipientPhone').value.trim();
+            const recipientAddress = document.getElementById('recipientAddress').value.trim();
             const bookType = document.getElementById('bookType').value;
             const numBooks = document.getElementById('numBooks').value.trim();
-            const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
             const additionalNotes = document.getElementById('additionalNotes').value.trim();
+            const selectedLanguage = document.querySelector('input[name="receiptLanguage"]:checked').value; // Get selected language
 
-            // Basic validation
-            if (!fullName || !phone || !bookType || !numBooks || !deliveryAddress) {
-                alert('Please fill in all required fields.');
+            // Basic validation (Recipient details are required)
+            if (!recipientFullName || !recipientPhone || !recipientAddress || !bookType || !numBooks) {
+                alert('Please fill in all required fields (Recipient and Book details).');
                 return;
             }
+
+            // Your Default "From" Details
+            const yourName = "Atta Ur Rehman";
+            const yourPhone = "03322964709";
+            const yourAddress = "Kot Chutta district Dera Ghazi Khan";
+
 
             // Generate Receipt Number
             const now = new Date();
@@ -165,38 +200,110 @@
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const seconds = now.getSeconds().toString().padStart(2, '0');
-            // A simple way to get a unique part - timestamp based
             const uniqueId = `${year}${month}${day}-${hours}${minutes}${seconds}`;
             const receiptNum = `#MB-${uniqueId}`;
 
             // Format Date and Time
             const receiptDateTime = now.toLocaleString(); // Uses local format
 
-            // Populate Receipt Section
-            document.getElementById('receiptNumber').textContent = receiptNum;
-            document.getElementById('receiptDateTime').textContent = receiptDateTime;
-            document.getElementById('receiptFullName').textContent = fullName;
-            document.getElementById('receiptPhone').textContent = phone;
-            document.getElementById('receiptBookType').textContent = bookType;
-            document.getElementById('receiptNumBooks').textContent = numBooks;
-            document.getElementById('receiptDeliveryAddress').textContent = deliveryAddress;
-            document.getElementById('receiptAdditionalNotes').textContent = additionalNotes || 'N/A / دستیاب نہیں'; // Handle empty notes
 
-            // Generate WhatsApp Message
-            const whatsappMessage = `السلام علیکم! میں MALIK BOOK BINDING سے اپنا آرڈر کنفرم کرنا چاہتا ہوں۔\n\n` +
+            // Populate Receipt Section based on selected language
+            const receiptContentDiv = document.getElementById('receiptContent');
+            receiptContentDiv.innerHTML = ''; // Clear previous content
+
+            let receiptHtml = '';
+            let whatsappMessage = '';
+            let receiptTitle = '';
+
+            if (selectedLanguage === 'english') {
+                receiptTitle = 'Parcel Receipt';
+                receiptHtml = `
+                    <p class="english-text"><strong>Receipt Number:</strong> <span id="receiptNumber">${receiptNum}</span></p>
+                    <p class="english-text"><strong>Date & Time:</strong> <span id="receiptDateTime">${receiptDateTime}</span></p>
+                    <hr class="my-4">
+
+                    <div class="address-section english-text">
+                        <h3>FROM:</h3>
+                        <p><strong>Name:</strong> ${yourName}</p>
+                        <p><strong>Phone:</strong> ${yourPhone}</p>
+                        <p><strong>Address:</strong> ${yourAddress}</p>
+                    </div>
+
+                    <div class="address-section english-text">
+                        <h3>TO:</h3>
+                        <p><strong>Name:</strong> <span id="receiptRecipientFullName">${recipientFullName}</span></p>
+                        <p><strong>Phone:</strong> <span id="receiptRecipientPhone">${recipientPhone}</span></p>
+                        <p><strong>Address:</strong> <span id="receiptRecipientAddress">${recipientAddress}</span></p>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h3 class="english-text">Order Details:</h3>
+                    <p class="english-text"><strong>Book Type:</strong> <span id="receiptBookType">${bookType}</span></p>
+                    <p class="english-text"><strong>Number of Books:</strong> <span id="receiptNumBooks">${numBooks}</span></p>
+                    <p class="english-text"><strong>Additional Notes:</strong> <span id="receiptAdditionalNotes">${additionalNotes || 'N/A'}</span></p>
+
+                    <hr class="my-4">
+                    <p class="text-center english-text">Thank you!</p>
+                `;
+                 whatsappMessage = `Hello! Here are the parcel details from MALIK BOOK BINDING.\n\n` +
+                                   `Receipt Number: ${receiptNum}\n` +
+                                   `Date & Time: ${receiptDateTime}\n\n` +
+                                   `FROM:\nName: ${yourName}\nPhone: ${yourPhone}\nAddress: ${yourAddress}\n\n` +
+                                   `TO:\nName: ${recipientFullName}\nPhone: ${recipientPhone}\nAddress: ${recipientAddress}\n\n` +
+                                   `Order Details:\nBook Type: ${bookType}\nNumber of Books: ${numBooks}\nAdditional Notes: ${additionalNotes || 'N/A'}\n\n` +
+                                   `Thank you!`;
+
+            } else { // selectedLanguage === 'urdu'
+                 receiptTitle = 'پارسل رسید';
+                 receiptHtml = `
+                    <p class="urdu-text"><strong>رسید نمبر:</strong> <span id="receiptNumber">${receiptNum}</span></p>
+                    <p class="urdu-text"><strong>تاریخ اور وقت:</strong> <span id="receiptDateTime">${receiptDateTime}</span></p>
+                    <hr class="my-4">
+
+                    <div class="address-section urdu-text">
+                        <h3>از طرف (FROM):</h3>
+                        <p><strong>نام:</strong> ${yourName}</p>
+                        <p><strong>فون:</strong> ${yourPhone}</p>
+                        <p><strong>پتہ:</strong> ${yourAddress}</p>
+                    </div>
+
+                    <div class="address-section urdu-text">
+                        <h3>بنام (TO):</h3>
+                        <p><strong>نام:</strong> <span id="receiptRecipientFullName">${recipientFullName}</span></p>
+                        <p><strong>فون:</strong> <span id="receiptRecipientPhone">${recipientPhone}</span></p>
+                        <p><strong>پتہ:</strong> <span id="receiptRecipientAddress">${recipientAddress}</span></p>
+                    </div>
+
+                    <hr class="my-4">
+
+                     <h3 class="urdu-text">آرڈر کی تفصیلات:</h3>
+                    <p class="urdu-text"><strong>جلد کی قسم:</strong> <span id="receiptBookType">${bookType}</span></p>
+                    <p class="urdu-text"><strong>جلدوں کی تعداد:</strong> <span id="receiptNumBooks">${numBooks}</span></p>
+                    <p class="urdu-text"><strong>اضافی ہدایات:</strong> <span id="receiptAdditionalNotes">${additionalNotes || 'دستیاب نہیں'}</span></p>
+
+                    <hr class="my-4">
+                    <p class="text-center urdu-text">شکریہ!</p>
+                `;
+                 whatsappMessage = `السلام علیکم! MALIK BOOK BINDING کی پارسل رسید کی تفصیلات حاضر ہیں۔\n\n` +
                                     `رسید نمبر: ${receiptNum}\n` +
-                                    `تاریخ اور وقت: ${receiptDateTime}\n` +
-                                    `مکمل نام: ${fullName}\n` +
-                                    `فون نمبر: ${phone}\n` +
-                                    `جلد کی قسم: ${bookType}\n` +
-                                    `جلدوں کی تعداد: ${numBooks}\n` +
-                                    `مکمل پتہ: ${deliveryAddress}\n` +
-                                    `اضافی ہدایات: ${additionalNotes || 'دستیاب نہیں'}\n\n` +
+                                    `تاریخ اور وقت: ${receiptDateTime}\n\n` +
+                                    `از طرف (FROM):\nنام: ${yourName}\nفون: ${yourPhone}\nپتہ: ${yourAddress}\n\n` +
+                                    `بنام (TO):\nنام: ${recipientFullName}\nفون: ${recipientPhone}\nپتہ: ${recipientAddress}\n\n` +
+                                    `آرڈر کی تفصیلات:\nجلد کی قسم: ${bookType}\nجلدوں کی تعداد: ${numBooks}\nاضافی ہدایات: ${additionalNotes || 'دستیاب نہیں'}\n\n` +
                                     `شکریہ!`;
+            }
 
+            document.getElementById('receiptTitleLang').textContent = receiptTitle;
+            receiptContentDiv.innerHTML = receiptHtml;
+
+
+            // Generate WhatsApp Message URL - Targetting Recipient's Phone Number
             const encodedMessage = encodeURIComponent(whatsappMessage);
-            // Replace with the actual WhatsApp number
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=923322964709&text=${encodedMessage}`;
+            const recipientPhoneCleaned = recipientPhone.replace(/[^0-9]/g, ''); // Clean phone number
+            // You might need to prepend country code if not already included in the input
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${recipientPhoneCleaned}&text=${encodedMessage}`;
+
             document.getElementById('whatsappLink').href = whatsappUrl;
 
 
@@ -208,34 +315,45 @@
         // Download PDF Button
         document.getElementById('downloadPdfBtn').addEventListener('click', function() {
             const receiptContent = document.getElementById('receiptContent'); // Element to convert to PDF
+             const receiptTitle = document.getElementById('receiptTitleLang').textContent; // Get the title text
+             const receiptNum = document.getElementById('receiptNumber').textContent; // Get the receipt number for filename
 
             // Use html2canvas to render the HTML element
             html2canvas(receiptContent, { scale: 2 }).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
+
                 const pdf = new jsPDF({
                     orientation: 'portrait',
                     unit: 'px',
-                    format: [canvas.width, canvas.height] // Use canvas dimensions for PDF size
+                    // Use canvas dimensions for PDF size to fit content
+                    format: [canvas.width, canvas.height]
                 });
 
+                 const imgWidth = pdf.internal.pageSize.getWidth();
+                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
                 // Add the image of the receipt content to the PDF
-                pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
 
                 // Save the PDF
-                const receiptNum = document.getElementById('receiptNumber').textContent;
-                pdf.save(`MALIK_Book_Binding_Receipt_${receiptNum}.pdf`);
+                 const fileName = `MALIK_Book_Binding_${receiptTitle.replace(/\s/g, '_')}_${receiptNum}.pdf`; // Include language title in filename
+                pdf.save(fileName);
             });
         });
 
         // New Order Button
         document.getElementById('newOrderBtn').addEventListener('click', function() {
-            // Clear form fields
-            document.getElementById('fullName').value = '';
-            document.getElementById('phone').value = '';
-            document.getElementById('bookType').value = '';
-            document.getElementById('numBooks').value = '1';
-            document.getElementById('deliveryAddress').value = '';
+            // Clear Recipient and Order fields - Your details remain hardcoded in the receipt logic
+            document.getElementById('recipientFullName').value = '';
+            document.getElementById('recipientPhone').value = '';
+            document.getElementById('recipientAddress').value = '';
+            document.getElementById('bookType').value = ''; // Keep select box empty
+            document.getElementById('numBooks').value = '1'; // Reset to default 1
             document.getElementById('additionalNotes').value = '';
+
+            // Reset language selection to default (English)
+            document.getElementById('langEnglish').checked = true;
 
             // Hide Receipt Section, Show Form Section
             document.getElementById('receiptSection').classList.add('hidden');
